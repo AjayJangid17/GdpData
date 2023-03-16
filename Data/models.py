@@ -4,7 +4,11 @@ from django.db import models
 
 
 
-class Gdp_Data(models.Model):
-    
-    price = models.FloatField()
+class Gdp_Data(models.Model):    
+    price = models.FloatField()    
     year = models.IntegerField(default=None)
+
+class Usd_data(models.Model):
+    price = models.FloatField()    
+
+    

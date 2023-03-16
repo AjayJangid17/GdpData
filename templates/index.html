@@ -7,6 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>GDP Price</title>
 
@@ -58,7 +59,7 @@
             border-radius: 5px;
             box-shadow: 0 1px 3px 0 rgb(0 0 0 / 8%), 0 5px 26px 0 rgb(67 94 131 / 15%);
         }
-
+       
     </style>
   </head>
   <body>
@@ -75,8 +76,10 @@
             <div id="gdp-container"></div>            
         </figure>
 
-        <div class="col text-center mt-4">
-            <button class="btn btn-secondary" id="convert-btn">Convert To USD</button>
+        <div class="d-block col text-center mt-4">
+            <div>
+                <button class="btn btn-secondary" id="convert-btn">Convert To USD</button>
+            </div>
         </div>
     </div>
     <!-- Optional JavaScript; choose one of the two! -->
@@ -95,7 +98,6 @@
         
         var years =  []
         var price =  []
-        dollor_price = 82.05
 
         converted_price = []
 
@@ -106,12 +108,12 @@
                 url:'/data/getGdpData/',
                 dataType:'json',
                 success:function(result){
-                    console.log(result['data'])
-                    result['data'].map(i => {
+                    console.log(result)
+                    result['response']['data'].map(i => {
                         years.push(i.year)
                         price.push(i.price)
                     })
-                    // chart.update();
+                    converted_price = result['response']['converted_price']
                     Highcharts.chart(chart);
                 }
             })           
@@ -147,19 +149,14 @@
                     data: price
                 }]
             }
-
+            
+            
             $('#convert-btn').click(function(){
             var btn_text = $('#convert-btn').text();
 
-                if(btn_text == 'Convert To USD'){
-                    if(!converted_price.length){                    
-                        for(var i=0;i<price.length;i++){
-                            usd = price[i]/dollor_price
-                            converted_price.push(+usd.toFixed(2))
-                        }
-                    }
+                if(btn_text == 'Convert To USD'){                    
                     chart.series[0].data = converted_price
-                    $('#convert-btn').text('Convert To INR')
+                    $('#convert-btn').text('Convert To INR');                    
                 }else{
                     chart.series[0].data = price
                     $('#convert-btn').text('Convert To USD')
